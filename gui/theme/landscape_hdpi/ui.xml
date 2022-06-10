@@ -14,14 +14,14 @@
 	</include>
 
 	<resources>
-		<font name="font_l" filename="RobotoCondensed-Regular.ttf" size="42"/>
-		<font name="font_m" filename="RobotoCondensed-Regular.ttf" size="32"/>
-		<font name="font_s" filename="RobotoCondensed-Regular.ttf" size="28"/>
-		<font name="fixed" filename="DroidSansMono.ttf" size="26"/>
+		<font name="font_l" filename="Comfortaa-Regular.ttf" size="42"/>
+		<font name="font_m" filename="Comfortaa-Regular.ttf" size="32"/>
+		<font name="font_s" filename="Comfortaa-Regular.ttf" size="28"/>
+		<font name="fixed" filename="UbuntuMono-R.ttf" size="26"/>
 
-		<font name="keylabel" filename="RobotoCondensed-Regular.ttf" size="50"/>
-		<font name="keylabel-small" filename="RobotoCondensed-Regular.ttf" size="42"/>
-		<font name="keylabel-longpress" filename="RobotoCondensed-Regular.ttf" size="26"/>
+		<font name="keylabel" filename="Comfortaa-Regular.ttf" size="50"/>
+		<font name="keylabel-small" filename="Comfortaa-Regular.ttf" size="42"/>
+		<font name="keylabel-longpress" filename="Comfortaa-Regular.ttf" size="26"/>
 
 		<image name="logo" filename="logo" retainaspect="1"/>
 		<image name="main_button" filename="main_button"/>
