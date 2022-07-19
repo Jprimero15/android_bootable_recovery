@@ -1178,9 +1178,9 @@ void DataManager::SetDefaultValues()
   mData.SetValue("tw_sleep", "5");
   mData.SetValue("tw_enable_fastboot", "0");
   if (android::base::GetBoolProperty("ro.virtual_ab.enabled", false))
-	mConst.SetValue("tw_virtual_ab.enabled", "1");
+	mConst.SetValue("TW_VIRTUAL_AB_ENABLED", "1");
   else
-  	mConst.SetValue("tw_virtual_ab.enabled", "0");
+  	mConst.SetValue("TW_VIRTUAL_AB_ENABLED", "0");
 
   // Brightness handling
   string findbright;
