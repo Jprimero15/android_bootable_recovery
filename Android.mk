@@ -114,7 +114,7 @@ LOCAL_C_INCLUDES += \
     system/extras \
     system/core/adb \
     system/core/libsparse \
-    external/zlib \
+    external/zlib-ng \
     system/core/libziparchive/include \
     external/freetype/include \
     external/boringssl/include \
