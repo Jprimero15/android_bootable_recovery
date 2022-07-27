@@ -310,7 +310,7 @@ void TWPartitionManager::Setup_Fstab_Partitions(bool Display_Error) {
 		//Setup Apex before decryption
 		TWPartition* sys = PartitionManager.Find_Partition_By_Path(PartitionManager.Get_Android_Root_Path());
 		TWPartition* ven = PartitionManager.Find_Partition_By_Path("/vendor");
-		if (sys) {
+		if (0) {
 			if (sys->Get_Super_Status()) {
 				sys->Mount(true);
 				if (ven) {
