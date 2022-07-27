@@ -711,15 +711,18 @@ void TWPartition::Setup_Data_Partition(bool Display_Error) {
 		char crypto_state[255];
 		property_get("ro.crypto.state", crypto_state, "error");
 		if (!Decrypt_FBE_DE() && strcmp(crypto_state, "error") != 0) {
+			LOGINFO("if (is_device_fbe == 1)\n");
 			if (is_device_fbe == 1)
 				LOGERR("Unable to decrypt FBE device\n");
 		} else {
+			LOGINFO("DataManager::SetValue(TW_IS_ENCRYPTED, 0);\n");
 			DataManager::SetValue(TW_IS_ENCRYPTED, 0);
 			if (datamedia)
 				Setup_Data_Media();
 
 		}
 	}
+	LOGINFO("if (datamedia && (!Is_Encrypted || (Is_Encrypted && Is_Decrypted))) {\n");
 	if (datamedia && (!Is_Encrypted || (Is_Encrypted && Is_Decrypted))) {
 		Setup_Data_Media();
 		Recreate_Media_Folder();
@@ -786,7 +789,9 @@ bool TWPartition::Decrypt_FBE_DE() {
 			LOGERR("This TWRP does not have synthetic password decrypt support\n");
 			pwd_type = 0;  // default password
 		}
+		LOGINFO("PartitionManager.Parse_Users START\n");
 		PartitionManager.Parse_Users();  // after load_all_de_keys() to parse_users
+		LOGINFO("PartitionManager.Parse_Users END\n");
 		std::vector<users_struct>::iterator iter;
 		std::vector<users_struct>* userList = PartitionManager.Get_Users_List();
 		for (iter = userList->begin(); iter != userList->end(); iter++) {
@@ -802,6 +807,7 @@ bool TWPartition::Decrypt_FBE_DE() {
 		DataManager::SetValue("tw_crypto_pwtype_0", pwd_type);
 		DataManager::SetValue(TW_CRYPTO_PASSWORD, "");
 		DataManager::SetValue("tw_crypto_display", "");
+		LOGINFO("Decrypt_FBE_DE RETURN TRUE\n");
 		return true;
 	}
 #else
@@ -809,6 +815,7 @@ bool TWPartition::Decrypt_FBE_DE() {
 #endif
 	}
 	DataManager::SetValue(TW_IS_FBE, 0);
+		LOGINFO("Decrypt_FBE_DE RETURN FALSE\n");
 	return false;
 }
 
@@ -2162,6 +2169,7 @@ exit:
 }
 
 void TWPartition::Check_FS_Type() {
+	int ret;
 	const char* type;
 	blkid_probe pr;
 
@@ -2172,10 +2180,12 @@ void TWPartition::Check_FS_Type() {
 	if (!Is_Present)
 		return;
 
+	LOGINFO("Probe device %s\n", Actual_Block_Device.c_str());
 	pr = blkid_new_probe_from_filename(Actual_Block_Device.c_str());
-	if (blkid_do_fullprobe(pr)) {
+	ret = blkid_do_fullprobe(pr);
+	if (ret) {
 		blkid_free_probe(pr);
-		LOGINFO("Can't probe device %s\n", Actual_Block_Device.c_str());
+		LOGINFO("Can't probe device %s, Mount_To_Decrypt=%d, ret=%d\n", Actual_Block_Device.c_str(), Mount_To_Decrypt, ret);
 		return;
 	}
 

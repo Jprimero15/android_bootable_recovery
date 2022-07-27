@@ -886,6 +886,7 @@ string TWFunc::System_Property_Get(string Prop_Name) {
 
 string TWFunc::Partition_Property_Get(string Prop_Name, TWPartitionManager &PartitionManager, string Mount_Point, string prop_file_name) {
 	bool mount_state = PartitionManager.Is_Mounted_By_Path(Mount_Point);
+	LOGINFO("TWFunc::Partition_Property_Get\n");
 	std::vector<string> buildprop;
 	string propvalue;
 	string prop_file;
