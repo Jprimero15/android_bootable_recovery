@@ -600,6 +600,13 @@ endif
 
 LOCAL_REQUIRED_MODULES += $(TWRP_REQUIRED_MODULES)
 
+ifeq ($(TARGET_DEVICE),mi439)
+LOCAL_CFLAGS += -DMI439
+endif
+
+LOCAL_CFLAGS += -DMY_DEVICE='"$(TARGET_DEVICE)"'
+LOCAL_CFLAGS += -DMY_BUILD_DATE='"$(shell TZ=UTC LANG=C date +%Y%m%d)"'
+
 include $(BUILD_EXECUTABLE)
 
 # Symlink for file_contexts

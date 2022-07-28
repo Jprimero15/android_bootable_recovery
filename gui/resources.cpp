@@ -315,12 +315,13 @@ std::string ResourceManager::FindString(const std::string& name) const
 		std::map<std::string, string_resource_struct>::const_iterator it = mStrings.find(name);
 		if (it != mStrings.end())
 			return it->second.value;
-		LOGERR("String resource '%s' not found. No default value.\n", name.c_str());
-		PageManager::AddStringResource("NO DEFAULT", name, "[" + name + ("]"));
+		//LOGERR("String resource '%s' not found. No default value.\n", name.c_str());
+		//PageManager::AddStringResource("NO DEFAULT", name, "[" + name + ("]"));
 	/*} else {
 		LOGINFO("String resources not loaded when looking for '%s'. No default value.\n", name.c_str());
 	}*/
-	return "[" + name + ("]");
+//	return "[" + name + ("]");
+	return name;
 }
 
 std::string ResourceManager::FindString(const std::string& name, const std::string& default_string) const
@@ -329,8 +330,8 @@ std::string ResourceManager::FindString(const std::string& name, const std::stri
 		std::map<std::string, string_resource_struct>::const_iterator it = mStrings.find(name);
 		if (it != mStrings.end())
 			return it->second.value;
-		LOGERR("String resource '%s' not found. Using default value.\n", name.c_str());
-		PageManager::AddStringResource("DEFAULT", name, default_string);
+		//LOGERR("String resource '%s' not found. Using default value.\n", name.c_str());
+		//PageManager::AddStringResource("DEFAULT", name, default_string);
 	/*} else {
 		LOGINFO("String resources not loaded when looking for '%s'. Using default value.\n", name.c_str());
 	}*/

@@ -1634,6 +1634,23 @@ bool TWPartition::Mount(bool Display_Error) {
 			else
 				LOGINFO("Unable to mount '%s'\n", Mount_Point.c_str());
 			LOGINFO("Actual block device: '%s', current file system: '%s'\n", Actual_Block_Device.c_str(), Current_File_System.c_str());
+#ifdef MI439
+			LOGINFO("MI439 MOUNT ERROR: Mount_Point=%s, Is_Super=%d, errno=%d, strerror(errno)=%s\n", Mount_Point.c_str(), Is_Super, errno, strerror(errno));
+			if (Mount_Point == "/cust") {
+				gui_highlight("=0xCAFEBABE Tip: The cust partition is only used for shipping MIUI Bloats on Stock MIUI. You can totally ignore this error if you're not making use of it.");
+			} else if (errno == 22 && Mount_Point == "/metadata") {
+				gui_highlight("=0xCAFEBABE Tip: Mi439 ROMs since 2022-07 won't boot without wiping Metadata partition. It's required for DSU feature.");
+			} else if (errno == 22 && !Is_Super && (Mount_Point == "/system_root" || Mount_Point == "/vendor") ) {
+				gui_highlight("=0xCAFEBABE Tip: The recovery wasn't booted in Dynamic Partitions mode, currently using plain partitions, and this partition appears to be not mountable.");
+			} else if (errno == 15 && Is_Super &&
+				(Mount_Point == "/system_root" ||
+				 Mount_Point == "/system_ext" ||
+				 Mount_Point == "/product" ||
+				 Mount_Point == "/odm" ||
+				 Mount_Point == "/vendor")) {
+					gui_highlight("=0xCAFEBABE Tip: This error will disappear when you reboot to Recovery with Dynamic Partitions ROM installed.");
+			}
+#endif
 			return false;
 #ifdef TW_NO_EXFAT_FUSE
 		}

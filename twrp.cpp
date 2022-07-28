@@ -376,6 +376,10 @@ static void reboot() {
 }
 
 int main(int argc, char **argv) {
+	char device_prop_val[PROPERTY_VALUE_MAX];
+	char myver[128];
+	string kernel_ver;
+
 	// Recovery needs to install world-readable files, so clear umask
 	// set by init
 	umask(0);
@@ -427,6 +431,28 @@ int main(int argc, char **argv) {
 	startup.parse(&argc, &argv);
 	twrpAdbBuFifo *adb_bu_fifo = new twrpAdbBuFifo();
 	TWFunc::Clear_Bootloader_Message();
+
+	sprintf(myver, "=0xCAFEBABE's TWRP build, Device:%s, Build date:%s", MY_DEVICE, MY_BUILD_DATE);
+	gui_msg(myver);
+
+	TWFunc::Exec_Cmd("uname -r", kernel_ver, false);
+	if (!kernel_ver.empty()) {
+		kernel_ver.pop_back();
+		sprintf(myver, "=Kernel version: %s", kernel_ver.c_str());
+		gui_msg(myver);
+	}
+
+	property_get("ro.product.name", device_prop_val, "");
+	if (strcmp(device_prop_val, "twrp_mi8937") == 0)
+		gui_msg("=Support group: https://t.me/mi_msm8937_group");
+	else if (strcmp(device_prop_val, "twrp_mi439") == 0)
+		gui_msg("=Support group: https://t.me/mi_sdm439_group");
+	else if (strcmp(device_prop_val, "twrp_oxygen") == 0)
+		gui_msg("=Support group: https://t.me/MiMax_2");
+	else
+		gui_msg("=Support group: https://t.me/me_cafebabe");
+
+	gui_msg("=");
 
 	if (startup.Get_Fastboot_Mode()) {
 		process_fastbootd_mode();
