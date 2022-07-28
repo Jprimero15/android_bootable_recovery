@@ -283,10 +283,7 @@ void TWPartitionManager::Setup_Fstab_Partitions(bool Display_Error) {
 		std::vector<TWPartition*>::iterator iter;
 		unsigned int storageid = 1 << 16;	// upper 16 bits are for physical storage device, we pretend to have only one
 
-		LOGINFO("for (iter = Partitions.begin(); iter != Partitions.end(); iter++)\n");
 		for (iter = Partitions.begin(); iter != Partitions.end(); iter++) {
-			LOGINFO("============== BEGIN ===================\n");
-			PartitionManager.Output_Partition(*iter);
 			(*iter)->Partition_Post_Processing(Display_Error);
 
 			if ((*iter)->Is_Storage) {
@@ -304,17 +301,13 @@ void TWPartitionManager::Setup_Fstab_Partitions(bool Display_Error) {
 			else
 				(*iter)->Has_Android_Secure = false;
 
-			if ((*iter)->Is_Super) {
-				LOGINFO("IS_SUPER %s\n", (*iter)->Actual_Block_Device.c_str());
+			if ((*iter)->Is_Super)
 				Prepare_Super_Volume((*iter));
-			}
-			LOGINFO("============== END ===================\n");
 		}
 
 		Unlock_Block_Partitions();
 
 		//Setup Apex before decryption
-		LOGINFO("Setup Apex before decryption\n");
 		TWPartition* sys = PartitionManager.Find_Partition_By_Path(PartitionManager.Get_Android_Root_Path());
 		TWPartition* ven = PartitionManager.Find_Partition_By_Path("/vendor");
 		if (sys) {
@@ -337,7 +330,6 @@ void TWPartitionManager::Setup_Fstab_Partitions(bool Display_Error) {
 	#endif
 			}
 		}
-		LOGINFO("USE_VENDOR_LIBS\n");
 	#ifndef USE_VENDOR_LIBS
 		if (ven)
 			ven->UnMount(true);
@@ -345,7 +337,6 @@ void TWPartitionManager::Setup_Fstab_Partitions(bool Display_Error) {
 			sys->UnMount(true);
 	#endif
 
-		LOGINFO("if (!datamedia && !settings_partition\n");
 		if (!datamedia && !settings_partition && Find_Partition_By_Path("/sdcard") == NULL && Find_Partition_By_Path("/internal_sd") == NULL && Find_Partition_By_Path("/internal_sdcard") == NULL && Find_Partition_By_Path("/emmc") == NULL) {
 			// Attempt to automatically identify /data/media emulated storage devices
 			TWPartition* Dat = Find_Partition_By_Path("/data");
@@ -359,7 +350,6 @@ void TWPartitionManager::Setup_Fstab_Partitions(bool Display_Error) {
 				Dat->MTP_Storage_ID = storageid;
 			}
 		}
-		LOGINFO("if (!settings_partition\n");
 		if (!settings_partition) {
 			for (iter = Partitions.begin(); iter != Partitions.end(); iter++) {
 				if ((*iter)->Is_Storage) {
@@ -370,7 +360,6 @@ void TWPartitionManager::Setup_Fstab_Partitions(bool Display_Error) {
 			if (!settings_partition)
 				LOGERR("Unable to locate storage partition for storing settings file.\n");
 		}
-		LOGINFO("if (!Write_Fstab\n");
 		if (!Write_Fstab()) {
 			if (Display_Error)
 				LOGERR("Error creating fstab\n");
@@ -388,7 +377,6 @@ void TWPartitionManager::Setup_Fstab_Partitions(bool Display_Error) {
 		}
 
 	#ifdef TW_INCLUDE_CRYPTO
-		LOGINFO("DataManager::SetValue(TW_IS_ENCRYPTED, 1);\n");
 		DataManager::SetValue(TW_IS_ENCRYPTED, 1);
 		Decrypt_Data();
 	#endif
@@ -433,7 +421,6 @@ int TWPartitionManager::Write_Fstab(void) {
 }
 
 void TWPartitionManager::Decrypt_Data() {
-	LOGINFO("TWPartitionManager::Decrypt_Data\n");
 	#ifdef TW_INCLUDE_CRYPTO
 	TWPartition* Decrypt_Data = Find_Partition_By_Path("/data");
 	if (Decrypt_Data && Decrypt_Data->Is_Encrypted && !Decrypt_Data->Is_Decrypted) {
@@ -1893,17 +1880,14 @@ void TWPartitionManager::Parse_Users() {
 			}
 
 			string filename;
-			LOGINFO("android::keystore::Get_Password_Type\n");
 			user.type = android::keystore::Get_Password_Type(userId, filename);
 
 			user.isDecrypted = false;
 			if (strcmp(user_check_result, "1") == 0)
 				user.isDecrypted = true;
-			LOGINFO("Users_List.push_back\n");
 			Users_List.push_back(user);
 		}
 	}
-	LOGINFO("Check_Users_Decryption_Status\n");
 	Check_Users_Decryption_Status();
 #endif
 }
@@ -1948,7 +1932,6 @@ void TWPartitionManager::Check_Users_Decryption_Status() {
 }
 
 int TWPartitionManager::Decrypt_Device(string Password, int user_id) {
-	LOGINFO("TWPartitionManager::Decrypt_Device\n");
 #ifdef TW_INCLUDE_CRYPTO
 	char crypto_blkdev[PROPERTY_VALUE_MAX];
 	std::vector<TWPartition*>::iterator iter;
@@ -1984,7 +1967,6 @@ int TWPartitionManager::Decrypt_Device(string Password, int user_id) {
 		int retry_count = 10;
 		while (!TWFunc::Path_Exists("/data/system/users/gatekeeper.password.key") && --retry_count)
 			usleep(2000); // A small sleep is needed after mounting /data to ensure reliable decrypt...maybe because of DE?
-		LOGINFO("Attempting to decrypt FBE for user\n");
 		gui_msg(Msg("decrypting_user_fbe=Attempting to decrypt FBE for user {1}...")(user_id));
 		if (android::keystore::Decrypt_User(user_id, Password)) {
 			gui_msg(Msg("decrypt_user_success_fbe=User {1} Decrypted Successfully")(user_id));
