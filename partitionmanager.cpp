@@ -3245,14 +3245,13 @@ bool TWPartitionManager::Decrypt_Adopted()
     }
 
   LOGINFO("Decrypt adopted storage starting\n");
-  char *xmlFile =
-    PageManager::LoadFileToBuffer(path, NULL);
+  char *xmlFile = PageManager::LoadFileToBuffer("/data/system/storage.xml", NULL);
   xml_document <> *doc = NULL;
   xml_node <> *volumes = NULL;
   string Primary_Storage_UUID = "";
   if (xmlFile != NULL)
     {
-      LOGINFO("successfully loaded %s\n", path.c_str());
+      LOGINFO("successfully loaded storage.xml\n");
       doc = new xml_document <> ();
       doc->parse < 0 > (xmlFile);
       volumes = doc->first_node("volumes");
@@ -3268,7 +3267,7 @@ bool TWPartitionManager::Decrypt_Adopted()
     }
   else
     {
-      LOGINFO("No %s for adopted storage\n", path.c_str());
+      LOGINFO("No /data/system/storage.xml for adopted storage\n");
       return false;
     }
   std::vector < TWPartition * >::iterator adopt;
