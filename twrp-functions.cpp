@@ -2227,19 +2227,8 @@ void TWFunc::Welcome_Message(void)
     gui_print("[Variant]   : %s\n", FOX_VARIANT);
     gui_print("[Codebase]  : %s, %s\n", Fox_Property_Get("ro.build.version.sdk").c_str(), FOX_CURRENT_DEV_STR);
     gui_print("[Build date]: %s\n", DataManager::GetStrValue("FOX_BUILD_DATE_REAL").c_str());
-    
-    if (uppercase(FOX_BUILD) == "UNOFFICIAL")
-      	gui_print_color("warning", "[Build type]: Unofficial. No official support for unofficial builds\n");
-    else {
-    	gui_print("[Build type]: %s\n", FOX_BUILD_TYPE);
-    	if (uppercase(FOX_BUILD_TYPE) == "BETA")
-    	    gui_print("[Support]   : https://t.me/OrangeFoxBeta\n");
-    	else
-    	if (uppercase(FOX_BUILD_TYPE) == "STABLE")
-    	    gui_print("[Support]   : https://t.me/OrangeFoxChat\n");
-    	else
-    	    gui_print_color("warning", "[Support]   : No official support for unknown builds\n");
-    }
+    gui_print("[Build by]  : Jprimero15\n");
+
 #ifdef FOX_ENABLE_LAB
     gui_print_color("error", "\n*** CONFIDENTIAL ALPHA. NOT FOR RELEASE!! ***\n\n");
 #endif
