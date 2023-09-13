@@ -2598,7 +2598,9 @@ bool TWPartition::Wipe_F2FS() {
 		return false;
 	}
 
-	needs_casefold = android::base::GetBoolProperty("external_storage.casefold.enabled", false);
+	if (Mount_Point == "/data") {
+		needs_casefold = android::base::GetBoolProperty("external_storage.casefold.enabled", false);
+	}
     	if (!Needs_Fs_Compress) {
     		Needs_Fs_Compress = android::base::GetBoolProperty("vold.has_compress", false);
     		if (Needs_Fs_Compress)
