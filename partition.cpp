@@ -2373,7 +2373,7 @@ bool TWPartition::Wipe_EXTFS(string File_System) {
 	gui_msg(Msg("formatting_using=Formatting {1} using {2}...")(Display_Name)("mke2fs"));
 
 	// Execute mke2fs to create empty ext4 filesystem
-	Command = "mke2fs -t " + File_System + " -b 4096 " + Actual_Block_Device + " " + size_str;
+	Command = "mke2fs -t " + File_System + " -b 4096 -I 512 " + Actual_Block_Device + " " + size_str;
 	LOGINFO("mke2fs command: %s\n", Command.c_str());
 	ret = TWFunc::Exec_Cmd(Command);
 	if (ret) {
@@ -2590,7 +2590,6 @@ bool TWPartition::Wipe_F2FS() {
 
 	bool NeedPreserveFooter = true;
 	bool needs_casefold = false;
-  	bool needs_projid = false;
 
 	Find_Actual_Block_Device();
 	if (!Is_Present) {
@@ -2600,7 +2599,6 @@ bool TWPartition::Wipe_F2FS() {
 	}
 
 	needs_casefold = android::base::GetBoolProperty("external_storage.casefold.enabled", false);
-    	needs_projid = android::base::GetBoolProperty("external_storage.projid.enabled", false);
     	if (!Needs_Fs_Compress) {
     		Needs_Fs_Compress = android::base::GetBoolProperty("vold.has_compress", false);
     		if (Needs_Fs_Compress)
@@ -2617,8 +2615,8 @@ bool TWPartition::Wipe_F2FS() {
 	char dev_sz_str[48];
 	sprintf(dev_sz_str, "%llu", (dev_sz / 4096));
 
-	if(needs_projid)
-		f2fs_command += " -O project_quota,extra_attr";
+	// Project ID
+	f2fs_command += " -O project_quota,extra_attr";
 
 	if(needs_casefold)
 		f2fs_command += " -O casefold -C utf8";
