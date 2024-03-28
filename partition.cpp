@@ -2599,7 +2599,6 @@ bool TWPartition::Wipe_F2FS() {
 	}
 
 	bool NeedPreserveFooter = true;
-	bool needs_casefold = false;
 
 	Find_Actual_Block_Device();
 	if (!Is_Present) {
@@ -2608,9 +2607,6 @@ bool TWPartition::Wipe_F2FS() {
 		return false;
 	}
 
-	if (Mount_Point == "/data") {
-		needs_casefold = android::base::GetBoolProperty("external_storage.casefold.enabled", false);
-	}
     	if (!Needs_Fs_Compress) {
     		Needs_Fs_Compress = android::base::GetBoolProperty("vold.has_compress", false);
     		if (Needs_Fs_Compress)
@@ -2630,7 +2626,7 @@ bool TWPartition::Wipe_F2FS() {
 	// Project ID
 	f2fs_command += " -O project_quota,extra_attr";
 
-	if(needs_casefold)
+	if (Mount_Point == "/data")
 		f2fs_command += " -O casefold -C utf8";
 
 	if (Needs_Fs_Compress)
